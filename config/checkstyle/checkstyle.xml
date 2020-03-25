@@ -48,12 +48,6 @@
         <module name="NonEmptyAtclauseDescription"/>
 
         <!-- Check imports -->
-        <module name="CustomImportOrder">
-            <property name="customImportOrderRules" value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
-            <property name="thirdPartyPackageRegExp" value="(com|de|groovy|io|lombok|mil|net|org)"/>
-            <property name="specialImportsRegExp" value="de.themorpheus"/>
-            <property name="sortImportsInGroupAlphabetically" value="true"/>
-        </module>
         <module name="UnusedImports"/>
         <module name="AvoidStarImport"/>
         <module name="RedundantImport"/>
