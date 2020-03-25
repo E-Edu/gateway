@@ -20,7 +20,17 @@ type Service {
     name: String
     version: String
     commit: String
-    buildTime: Int
+    buildTime: Long
+}
+
+type Task {
+    taskId: Int
+    task: String
+    authorId: ID
+    necessaryPoints: Int
+    taskType: TaskType
+    lecture: Lecture
+    difficulty: Difficulty
 }
 
 type Task {
