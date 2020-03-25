@@ -20,6 +20,6 @@ public class ServiceInfoDTO {
 	@NotNull @NotEmpty @NotBlank
 	private String commit;
 	@Min(0)
-	private int buildTime;
+	private long buildTime;
 
 }
