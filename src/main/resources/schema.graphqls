@@ -1,8 +1,10 @@
 type Query {
-    serviceByName(name: String): Service
+
+    serviceInfoByName(name: String): ServiceInfo
+
 }
 
-type Service {
+type ServiceInfo {
     name: String
     version: String
     commit: String
