@@ -7,7 +7,7 @@ services:
     image: eedu/gateway
     container_name: eedu-gateway
     ports:
-      - 8080:8080
+      - 80:80
     environment:
       JWT_SECRET: SECRET
       SERVICE_SECRET: SECRET
