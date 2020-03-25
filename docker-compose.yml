@@ -3,12 +3,11 @@
 version: '3.6'
 
 services:
-  task:
+  gateway:
     image: eedu/gateway
     container_name: eedu-gateway
-    restart: never
     ports:
-      - 80:80
+      - 8080:8080
     environment:
       JWT_SECRET: SECRET
       SERVICE_SECRET: SECRET
