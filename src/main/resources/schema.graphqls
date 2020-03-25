@@ -1,12 +1,61 @@
 type Query {
 
-    serviceInfoByName(name: String): ServiceInfo
+    serviceInfoByName(name: String): Service
+
+    taskById(taskId: Int): Task
+
+    taskTypeById(taskId: Int): TaskType
+
+    subjectById(subjectId: Int): Subject
+
+    moduleById(moduleId: Int): Module
+
+    lectureById(lectureId: Int): Lecture
+
+    difficultyById(difficultyId: Int): Difficulty
 
 }
 
-type ServiceInfo {
+type Service {
     name: String
     version: String
     commit: String
     buildTime: Int
+}
+
+type Task {
+    taskId: Int
+    task: String
+    authorId: ID
+    necessaryPoints: Int
+    taskType: TaskType
+    lecture: Lecture
+    difficulty: Difficulty
+}
+
+type TaskType {
+    taskTypeId: Int
+    displayName: String
+}
+
+type Subject {
+    subjectId: Int
+    displayName: String
+}
+
+type Module {
+    moduleId: Int
+    displayName: String
+    subject: Subject
+}
+
+type Lecture {
+    lectureId: Int
+    displayName: String
+    module: Module
+}
+
+type Difficulty {
+    difficultyId: Int
+    displayName: String
 }
