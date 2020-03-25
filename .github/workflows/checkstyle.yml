@@ -13,4 +13,4 @@ jobs:
         with:
           java-version: 1.8
       - run: chmod 755 gradlew
-      - run: gradlew checkstyleMain
+      - run: ./gradlew checkstyleMain

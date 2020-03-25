@@ -1,0 +1,10 @@
+type Query {
+    serviceByName(name: String): Service
+}
+
+type Service {
+    name: String
+    version: String
+    commit: String
+    buildTime: Int
+}

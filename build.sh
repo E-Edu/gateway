@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-mvn clean install -Dcheckstyle.skip
+./gradlew build -x checkstyleMain -x checkstyleTest
