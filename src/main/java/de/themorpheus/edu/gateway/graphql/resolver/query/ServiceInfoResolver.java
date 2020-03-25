@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceInfoResolver implements GraphQLQueryResolver {
 
-	public ServiceInfoDTO serviceByName(@NotNull @NotEmpty @NotBlank String name, DataFetchingEnvironment environment) {
+	public ServiceInfoDTO serviceInfoByName(@NotNull @NotEmpty @NotBlank String name, DataFetchingEnvironment environment) {
 		return new ServiceInfoDTO(
 			name,
 			"1.0",
