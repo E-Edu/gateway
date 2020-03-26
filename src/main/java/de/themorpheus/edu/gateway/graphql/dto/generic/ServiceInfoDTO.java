@@ -1,4 +1,4 @@
-package de.themorpheus.edu.gateway.graphql.dto;
+package de.themorpheus.edu.gateway.graphql.dto.generic;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
