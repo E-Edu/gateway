@@ -23,7 +23,7 @@ public class UserResolver implements GraphQLQueryResolver {
 	);
 
 	public UserDTO userByUserId(@NotNull UUID userId, DataFetchingEnvironment environment) {
-		if (EXAMPLE.getUserId().equals(userId)) return null;
+		if (!EXAMPLE.getUserId().equals(userId)) return null;
 
 		return EXAMPLE;
 	}
@@ -31,14 +31,14 @@ public class UserResolver implements GraphQLQueryResolver {
 	public UserDTO userByUserName(@NotNull @NotEmpty @NotBlank String firstName,
 								  @NotNull @NotEmpty @NotBlank String lastName,
 								  DataFetchingEnvironment environment) {
-		if (EXAMPLE.getFirstName().equalsIgnoreCase(firstName)) return null;
-		if (EXAMPLE.getFirstName().equalsIgnoreCase(lastName)) return null;
+		if (!EXAMPLE.getFirstName().equalsIgnoreCase(firstName)) return null;
+		if (!EXAMPLE.getLastName().equalsIgnoreCase(lastName)) return null;
 
 		return EXAMPLE;
 	}
 
 	public UserDTO userByEmail(@NotNull @NotEmpty @NotBlank String email, DataFetchingEnvironment environment) {
-		if (EXAMPLE.getEmail().equals(email)) return null;
+		if (!EXAMPLE.getEmail().equals(email)) return null;
 
 		return EXAMPLE;
 	}
