@@ -9,7 +9,6 @@ import de.themorpheus.edu.gateway.graphql.dto.task.TaskTypeDTO;
 import de.themorpheus.edu.gateway.graphql.resolver.query.user.UserResolver;
 import org.springframework.stereotype.Component;
 import javax.validation.constraints.Min;
-import java.util.UUID;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 

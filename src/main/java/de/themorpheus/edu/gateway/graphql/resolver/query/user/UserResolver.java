@@ -29,8 +29,8 @@ public class UserResolver implements GraphQLQueryResolver {
 	}
 
 	public UserDTO userByUserName(@NotNull @NotEmpty @NotBlank String firstName,
-								  @NotNull @NotEmpty @NotBlank String lastName,
-								  DataFetchingEnvironment environment) {
+								@NotNull @NotEmpty @NotBlank String lastName,
+								DataFetchingEnvironment environment) {
 		if (!EXAMPLE.getFirstName().equalsIgnoreCase(firstName)) return null;
 		if (!EXAMPLE.getLastName().equalsIgnoreCase(lastName)) return null;
 
