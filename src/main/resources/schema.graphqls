@@ -36,7 +36,7 @@ type Mutation {
 
     # User
 
-    authenticate(userAuth: UserAuth): Boolean
+    authenticate(userAuth: UserAuth): UserAuthResult
 
 }
 
@@ -108,10 +108,14 @@ input UserAuth {
     key: String # Email or Username
 }
 
+type UserAuthResult {
+    result: UserAuthResultType
+}
+
 # HTTP Secure Cookie: device_id
 # HTTP Secure Cookie: refresh_token
 #   See: https://auth0.com/learn/refresh-tokens/
-enum UserAuthResult {
+enum UserAuthResultType {
     SUCCESS, # refresh_token set via HTTP Secure Cookie
     USER_NOT_FOUND,
     AUTHENTICATION_FAILED, # Password wrong, banned, too many request...
