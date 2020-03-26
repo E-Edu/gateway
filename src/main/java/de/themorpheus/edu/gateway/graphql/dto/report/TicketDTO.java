@@ -1,6 +1,6 @@
-package de.themorpheus.edu.gateway.graphql.dto.task;
+package de.themorpheus.edu.gateway.graphql.dto.report;
 
-import de.themorpheus.edu.gateway.graphql.dto.user.UserDTO;
+import de.themorpheus.edu.gateway.graphql.dto.task.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,18 +12,21 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDTO {
+public class TicketDTO {
 
 	@Min(0)
-	private int taskId;
+	private int ticketId;
 	@NotNull @NotEmpty @NotBlank
-	private String task;
+	private String title;
+	@NotNull @NotEmpty @NotBlank
+	private String description;
 	@NotNull
-	private UserDTO author;
-	@Min(0)
-	private int necessaryPoints;
-	private TaskTypeDTO taskType;
-	private LectureDTO lecture;
-	private DifficultyDTO difficulty;
+	private TaskDTO task;
+	@NotNull
+	private TicketType ticketType;
+
+	public enum TicketType {
+		INVALID_TASK
+	}
 
 }
