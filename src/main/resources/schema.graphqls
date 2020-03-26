@@ -101,18 +101,18 @@ type User {
     status: Int
 }
 
-# HTTP Secure Cookie: device_id
+# HTTP Secure Cookie: device_id (optional)
 #   See: https://owasp.org/www-community/Slow_Down_Online_Guessing_Attacks_with_Device_Cookies
-# HTTP Secure Cookie: refresh_token
-#   See: https://auth0.com/learn/refresh-tokens/
 input UserAuth {
-    passwordHash: String # PBKDF2 (3k rounds) encrypted password
+    passwordHash: String # PBKDF2 (3k rounds) hashed password
     key: String # Email or Username
 }
 
 # HTTP Secure Cookie: device_id
 # HTTP Secure Cookie: refresh_token
+#   See: https://auth0.com/learn/refresh-tokens/
 enum UserAuthResult {
+    SUCCESS, # refresh_token set via HTTP Secure Cookie
     USER_NOT_FOUND,
     AUTHENTICATION_FAILED, # Password wrong, banned, too many request...
     MAINTENANCE
