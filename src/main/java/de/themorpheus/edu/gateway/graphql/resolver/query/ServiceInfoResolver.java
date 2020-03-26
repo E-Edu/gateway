@@ -1,6 +1,6 @@
 package de.themorpheus.edu.gateway.graphql.resolver.query;
 
-import de.themorpheus.edu.gateway.graphql.dto.ServiceInfoDTO;
+import de.themorpheus.edu.gateway.graphql.dto.generic.ServiceInfoDTO;
 import com.jcabi.manifests.Manifests;
 import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotBlank;
