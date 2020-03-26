@@ -6,6 +6,7 @@ import de.themorpheus.edu.gateway.graphql.dto.task.ModuleDTO;
 import de.themorpheus.edu.gateway.graphql.dto.task.SubjectDTO;
 import de.themorpheus.edu.gateway.graphql.dto.task.TaskDTO;
 import de.themorpheus.edu.gateway.graphql.dto.task.TaskTypeDTO;
+import de.themorpheus.edu.gateway.graphql.resolver.query.user.UserResolver;
 import org.springframework.stereotype.Component;
 import javax.validation.constraints.Min;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class TaskResolver implements GraphQLQueryResolver {
 	public static final TaskDTO EXAMPLE = new TaskDTO(
 		0,
 		"Create something",
-		UUID.randomUUID(),
+		UserResolver.EXAMPLE,
 		10,
 		new TaskTypeDTO(
 			0,

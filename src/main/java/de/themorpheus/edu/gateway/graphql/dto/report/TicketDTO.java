@@ -23,10 +23,10 @@ public class TicketDTO {
 	@NotNull
 	private TaskDTO task;
 	@NotNull
-	private TaskDTO ticketType;
+	private TicketType ticketType;
 
 	public enum TicketType {
-
+		INVALID_TASK
 	}
 
 }
