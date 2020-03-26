@@ -1,6 +1,10 @@
 type Query {
 
+    # Generic
+
     serviceInfoByName(name: String): Service
+
+    # Task
 
     taskById(taskId: Int): Task
 
@@ -14,7 +18,30 @@ type Query {
 
     difficultyById(difficultyId: Int): Difficulty
 
+    # User
+
+    userByUserId(userId: ID): User
+
+    userByUserName(firstName: String, lastName: String): User
+
+    userByEmail(email: String): User
+
+    # Ticket
+
+    ticketByTicketId(ticketId: Int): Ticket
+
 }
+
+type Mutation {
+
+    # User
+
+    authenticate(userAuth: UserAuth): Boolean
+
+}
+
+# ================ Generic ================
+scalar Long
 
 type Service {
     name: String
@@ -23,10 +50,12 @@ type Service {
     buildTime: Long
 }
 
+# ================ Task MicroService ================
+
 type Task {
     taskId: Int
     task: String
-    authorId: ID
+    author: User
     necessaryPoints: Int
     taskType: TaskType
     lecture: Lecture
@@ -59,3 +88,38 @@ type Difficulty {
     difficultyId: Int
     displayName: String
 }
+
+# ================ User MicroService ================
+
+type User {
+    userId: ID # UUID
+    firstName: String
+    lastName: String
+    createdAt: String # Unix timestamp » Millis UTC
+    email: String
+    role: Int
+    status: Int
+}
+
+input UserAuth {
+    passwordHash: String # PBKDF2 (3k rounds) encrypted password
+    key: String # Email or Username
+}
+
+enum UserAuthResult {
+    USER_NOT_FOUND,
+    AUTHENTICATION_FAILED, # Password wrong, banned, too many request...
+    MAINTENANCE
+}
+
+# ================ Report MicroService ================
+
+type Ticket {
+    ticketId: Int
+    task: Task
+    title: String
+    description: String
+    ticketType: TicketType
+}
+
+enum TicketType
