@@ -33,16 +33,6 @@ type Task {
     difficulty: Difficulty
 }
 
-type Task {
-    taskId: Int
-    task: String
-    authorId: ID
-    necessaryPoints: Int
-    taskType: TaskType
-    lecture: Lecture
-    difficulty: Difficulty
-}
-
 type TaskType {
     taskTypeId: Int
     displayName: String
