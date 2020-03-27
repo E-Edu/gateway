@@ -19,13 +19,13 @@ public class GatewayApplication {
 
 	@Bean
 	public WebMvcConfigurer webConfiguration() {
-		return new org.springframework.web.servlet.config.annotation.WebMvcConfigurer() {
+		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping(GRAPHQL_URL).allowedOrigins(
 					"http://localhost:3000",
 					"api.e-edu.the-morpheus.de"
-				);
+				).allowedMethods("GET", "OPTION", "POST", "PATCH", "PUT", "DELETE");
 			}
 		};
 	}
