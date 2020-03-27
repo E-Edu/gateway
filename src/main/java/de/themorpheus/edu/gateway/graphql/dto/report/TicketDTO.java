@@ -26,7 +26,7 @@ public class TicketDTO {
 	private TicketType ticketType;
 
 	public enum TicketType {
-		INVALID_TASK
+		NONE
 	}
 
 }
