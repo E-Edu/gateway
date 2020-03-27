@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:alpine-jre
+FROM adoptopenjdk/openjdk11:alpine-jre
 
 WORKDIR /eedu
 
