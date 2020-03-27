@@ -38,6 +38,8 @@ type Mutation {
 
     authenticate(userAuth: UserAuth): UserAuthResult
 
+    jwt(jwtRequest: JwtRequest): JwtResult
+
 }
 
 # ================ Generic ================
@@ -128,6 +130,13 @@ input JwtRequest
 
 type JwtResult {
     token: String # JWT; ONLY stored in the frontend state manager!
+    status: String
+}
+
+enum JwtStatus {
+    INVALID,
+    EXPIRED,
+    VERIFIED
 }
 
 # ================ Report MicroService ================
