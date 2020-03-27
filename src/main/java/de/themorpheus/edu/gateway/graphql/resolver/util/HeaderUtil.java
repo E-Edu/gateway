@@ -71,13 +71,13 @@ public class HeaderUtil {
 
 	@RequiredArgsConstructor
 	public enum CookieOption {
-		MAX_AGE(true,"Max-Age"),
-		EXPIRES(true,"Expires"),
-		PATH(true,"Path"),
-		DOMAIN(true,"Domain"),
-		SAME_SITE(true,"SameSite"),
-		SECURE(false,"Secure"),
-		HTTP_ONLY(false,"HttpOnly");
+		MAX_AGE(true, "Max-Age"),
+		EXPIRES(true, "Expires"),
+		PATH(true, "Path"),
+		DOMAIN(true, "Domain"),
+		SAME_SITE(true, "SameSite"),
+		SECURE(false, "Secure"),
+		HTTP_ONLY(false, "HttpOnly");
 
 		@Getter private final boolean valueRequired;
 		@Getter private final String value;
