@@ -7,7 +7,7 @@ plugins {
 
 group = 'de.the-morpheus.e-du'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.9'
 
 configurations {
   developmentOnly
@@ -39,6 +39,7 @@ dependencies {
   /* Spring */
   implementation 'org.springframework.boot:spring-boot-starter'
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  compile group: 'org.springframework', name: 'spring-webmvc', version: '5.2.5.RELEASE'
 
   /* Test */
   testImplementation 'org.springframework.security:spring-security-test'
