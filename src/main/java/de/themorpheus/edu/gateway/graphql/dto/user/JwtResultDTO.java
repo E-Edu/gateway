@@ -14,5 +14,13 @@ public class JwtResultDTO {
 
 	@NotNull @NotEmpty @NotBlank
 	private String token;
+	@NotNull
+	private JwtStatus status;
+
+	public enum JwtStatus {
+		INVALID,
+		EXPIRED,
+		VERIFIED
+	}
 
 }
