@@ -140,4 +140,6 @@ type Ticket {
     ticketType: TicketType
 }
 
-enum TicketType
+enum TicketType {
+    NONE
+}
