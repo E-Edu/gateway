@@ -15,7 +15,7 @@ public class TicketResolver implements GraphQLQueryResolver {
 		"Invalide Aufgabe",
 		"Die Aufgabe ist invalide",
 		TaskResolver.EXAMPLE,
-		TicketDTO.TicketType.INVALID_TASK
+		TicketDTO.TicketType.NONE
 	);
 
 	public TicketDTO ticketByTicketId(@Min(0) int ticketId, DataFetchingEnvironment environment) {
