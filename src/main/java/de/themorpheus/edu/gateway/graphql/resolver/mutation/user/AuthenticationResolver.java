@@ -1,16 +1,15 @@
 package de.themorpheus.edu.gateway.graphql.resolver.mutation.user;
 
-import de.themorpheus.edu.gateway.graphql.dto.user.JwtRequestDTO;
 import de.themorpheus.edu.gateway.graphql.dto.user.JwtResultDTO;
 import de.themorpheus.edu.gateway.graphql.dto.user.UserAuthDTO;
 import de.themorpheus.edu.gateway.graphql.dto.user.UserAuthResultDTO;
 import org.springframework.stereotype.Component;
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 import de.themorpheus.edu.gateway.graphql.resolver.util.HeaderUtil;
 import de.themorpheus.edu.gateway.graphql.resolver.util.JsonWebToken;
 import de.themorpheus.edu.gateway.graphql.resolver.util.RefreshToken;
-import java.util.Map;
-import java.util.Optional;
+import java.time.Duration;
 import java.util.UUID;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -19,19 +18,14 @@ import graphql.schema.DataFetchingEnvironment;
 public class AuthenticationResolver implements GraphQLMutationResolver {
 
 	public UserAuthResultDTO authenticate(@Valid UserAuthDTO userAuth, DataFetchingEnvironment environment) {
-		Optional<String> optionalDeviceId = HeaderUtil.findHeader(environment, HeaderUtil.DEVICE_ID);
+		String deviceId = HeaderUtil.getCookie(environment, HeaderUtil.DEVICE_ID);
 
 		deviceId: {
-			HeaderUtil.setCookie(
-				environment,
-				Map.of(
-					HeaderUtil.DEVICE_ID, optionalDeviceId.orElse("EXAMPLE_DEVICE_COOKIE"),
-					//HeaderUtil.CookieOption.SAME_SITE.getValue(), "Strict" //TODO: Activate
-					HeaderUtil.CookieOption.SAME_SITE.getValue(), "None"
-				),
-				HeaderUtil.CookieOption.SECURE,
-				HeaderUtil.CookieOption.HTTP_ONLY
-			);
+			Cookie cookie = new Cookie(HeaderUtil.DEVICE_ID, deviceId == null ? "EXAMPLE_DEVICE_COOKIE" : deviceId);
+			cookie.setHttpOnly(true);
+			cookie.setMaxAge((int) Duration.ofDays(365).toSeconds());
+			//cookie.setSecure(true); //TODO: Only in productive
+			HeaderUtil.addCookie(environment, cookie);
 		}
 
 		//TODO: Backend authentication
@@ -40,22 +34,20 @@ public class AuthenticationResolver implements GraphQLMutationResolver {
 
 		if (resultType == UserAuthResultDTO.UserAuthResultType.SUCCESS) {
 			refreshToken: {
-				HeaderUtil.setCookie(
-					environment,
-					Map.of(
-						HeaderUtil.REFRESH_TOKEN, RefreshToken.generate(userId),
-						HeaderUtil.CookieOption.SAME_SITE.getValue(), "None" //TODO: Strict
-					),
-					HeaderUtil.CookieOption.SECURE,
-					HeaderUtil.CookieOption.HTTP_ONLY
-				);
+				Cookie cookie = new Cookie(HeaderUtil.REFRESH_TOKEN, RefreshToken.generate(userId));
+				cookie.setHttpOnly(true);
+				cookie.setMaxAge((int) Duration.ofDays(365).toSeconds());
+				//cookie.setSecure(true); //TODO: Only in productive
+
+				HeaderUtil.addCookie(environment, cookie);
+				//TODO: Same-Site?
 			}
 		}
 
 		return new UserAuthResultDTO(resultType);
 	}
 
-	public JwtResultDTO jwt(@Valid JwtRequestDTO requestDTO, DataFetchingEnvironment environment) {
+	public JwtResultDTO jwt(DataFetchingEnvironment environment) {
 		// Get cookie
 		String refreshTokenCookie = HeaderUtil.getCookie(environment, HeaderUtil.REFRESH_TOKEN);
 		if (refreshTokenCookie == null) return new JwtResultDTO(null, JwtResultDTO.JwtStatus.INVALID); //TODO: 403 Forbidden
