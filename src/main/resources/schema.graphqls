@@ -38,7 +38,7 @@ type Mutation {
 
     authenticate(userAuth: UserAuth): UserAuthResult
 
-    jwt(jwtRequest: JwtRequest): JwtResult
+    jwt: JwtResult
 
 }
 
@@ -126,7 +126,6 @@ enum UserAuthResultType {
 
 # HTTP Secure Cookie: refresh_token
 # HTTP Secure Cookie: device_id
-input JwtRequest
 
 type JwtResult {
     token: String # JWT; ONLY stored in the frontend state manager!
