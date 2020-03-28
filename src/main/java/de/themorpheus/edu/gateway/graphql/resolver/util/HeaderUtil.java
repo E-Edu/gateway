@@ -2,11 +2,12 @@ package de.themorpheus.edu.gateway.graphql.resolver.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.servlet.context.DefaultGraphQLServletContext;
 
@@ -15,19 +16,20 @@ public class HeaderUtil {
 	public static final String DEVICE_ID = "device_id";
 	public static final String REFRESH_TOKEN = "refresh_token";
 
-	public static final String SET_COOKIE = "set-cookie";
 	public static final String COOKIE = "cookie";
 
-	public static Optional<String> findHeader(DataFetchingEnvironment environment, String header) {
+	public static List<String> findRequestHeader(DataFetchingEnvironment environment, String header) {
 		DefaultGraphQLServletContext context = environment.getContext();
 		HttpServletRequest request = context.getHttpServletRequest();
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String currentHeader = headerNames.nextElement();
-			if (currentHeader.equalsIgnoreCase(header)) return Optional.of(request.getHeader(currentHeader));
+		Enumeration<String> headers = request.getHeaders(header);
+
+		List<String> result = new ArrayList<>();
+		while (headers.hasMoreElements()) {
+			String currentHeader = headers.nextElement();
+			result.add(currentHeader);
 		}
 
-		return Optional.empty();
+		return result;
 	}
 
 	public static void setHeader(DataFetchingEnvironment environment, String header, String value) {
@@ -36,35 +38,24 @@ public class HeaderUtil {
 		response.setHeader(header, value);
 	}
 
-	public static void setCookie(DataFetchingEnvironment environment, Map<String, String> cookies, CookieOption... options) {
+	public static void addCookie(DataFetchingEnvironment environment, Cookie cookie) {
 		DefaultGraphQLServletContext context = environment.getContext();
 		HttpServletResponse response = context.getHttpServletResponse();
-		StringBuilder value = new StringBuilder();
-		cookies.forEach((cookieKey, cookieValue) -> {
-			value.append(cookieKey);
-			value.append('=');
-			value.append(cookieValue);
-			value.append(';');
-		});
-
-		for (CookieOption option : options) {
-			if (option.isValueRequired()) throw new IllegalArgumentException("Consider passing this option via 'cookies': " + option);
-			value.append(option.getValue());
-			value.append(';');
-		}
-
-		response.setHeader(SET_COOKIE, value.toString());
+		response.addCookie(cookie);
 	}
 
 	public static String getCookie(DataFetchingEnvironment environment, String key) {
-		Optional<String> cookieOptional = HeaderUtil.findHeader(environment, COOKIE);
-		if (!cookieOptional.isPresent()) return null;
+		List<String> cookiesList = HeaderUtil.findRequestHeader(environment, COOKIE);
+		if (cookiesList.isEmpty()) return null;
 
-		String[] parts = cookieOptional.get().split(";");
+		for (String cookies : cookiesList) {
+			for (String c : cookies.split(";")) {
+				String cookie = c.trim();
 
-		for (String part : parts)
-			if (part.startsWith(key) && part.contains("="))
-				return part.split("=")[1];
+				if (cookie.startsWith(key) && cookie.contains("="))
+					return cookie.split("=")[1];
+			}
+		}
 
 		return null;
 	}
