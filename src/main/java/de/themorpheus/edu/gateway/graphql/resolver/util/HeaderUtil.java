@@ -49,8 +49,8 @@ public class HeaderUtil {
 		if (cookiesList.isEmpty()) return null;
 
 		for (String cookies : cookiesList) {
-			for (String cookie : cookies.split(";")) {
-				cookie = cookie.trim();
+			for (String c : cookies.split(";")) {
+				String cookie = c.trim();
 
 				if (cookie.startsWith(key) && cookie.contains("="))
 					return cookie.split("=")[1];
