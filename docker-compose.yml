@@ -1,8 +1,21 @@
-# Please fill out with content
-
 version: '3.6'
 
 services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+
+  gateway_grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    user: "0"
+    links:
+      - influxdb
+    volumes:
+      - /srv/docker/grafana/data:/var/lib/grafana
+
   gateway:
     image: eedu/gateway
     container_name: eedu-gateway
@@ -13,3 +26,8 @@ services:
       SERVICE_SECRET: SECRET
       PRODUCTIVE: "false"
       SENTRY_ENABLED: "${SENTRY_ENABLED}"
+      INFLUX_URI: "http://influxdb:8086"
+      INFLUX_USERNAME: 0
+      INFLUX_PASSWORD: ""
+      INFLUX_DB: "gateway"
+      INFLUX_STEP: "1m"

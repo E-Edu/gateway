@@ -38,6 +38,8 @@
 		<Logger name="com.jcabi.manifests" level="warn"/>
 		<Logger name="io.sentry" level="warn"/>
 		<Logger name="graphql.execution" level="warn"/>
+		<Logger name="graphql.GraphQL" level="warn"/>
 		<Logger name="notprivacysafe.graphql" level="warn"/>
+		<Logger name="io.micrometer.influx" level="warn"/>
 	</Loggers>
 </Configuration>

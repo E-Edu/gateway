@@ -1,6 +1,7 @@
 package de.themorpheus.edu.gateway;
 
 import de.themorpheus.edu.gateway.util.GitInfo;
+import com.careykevin.graphql.actuator.instrumentation.EnableGraphQLActuator;
 import com.jcabi.manifests.Manifests;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.IOException;
 
+@EnableGraphQLActuator
 @SpringBootApplication
 public class GatewayApplication {
 
