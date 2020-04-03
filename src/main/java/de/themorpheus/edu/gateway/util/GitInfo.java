@@ -16,7 +16,7 @@ public class GitInfo {
 	private String buildUserEmail;
 	private String buildVersion;
 	private String commitId;
-	private String commitMessageShort;;
+	private String commitMessageShort;
 	private String commitUserEmail;
 	private String gitDirty;
 

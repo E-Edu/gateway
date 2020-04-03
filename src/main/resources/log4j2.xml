@@ -37,5 +37,7 @@
 		<Logger name="graphql.kickstart" level="warn"/>
 		<Logger name="com.jcabi.manifests" level="warn"/>
 		<Logger name="io.sentry" level="warn"/>
+		<Logger name="graphql.execution" level="warn"/>
+		<Logger name="notprivacysafe.graphql" level="warn"/>
 	</Loggers>
 </Configuration>
