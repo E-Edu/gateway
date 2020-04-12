@@ -1,10 +1,12 @@
 package de.themorpheus.edu.gateway;
 
+import de.themorpheus.edu.gateway.backend.BackendAPI;
 import de.themorpheus.edu.gateway.util.GitInfo;
 import com.careykevin.graphql.actuator.instrumentation.EnableGraphQLActuator;
 import com.jcabi.manifests.Manifests;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +25,13 @@ public class GatewayApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GatewayApplication.class.getSimpleName());
 
-	public static void main(String[] args) {
+	@Getter private static BackendAPI backendAPI;
+
+	public static void main(String[] args) throws IOException {
 		SpringApplication.run(GatewayApplication.class, args);
 		initSentry();
+
+		backendAPI = new BackendAPI();
 	}
 
 	@Bean
