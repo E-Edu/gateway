@@ -18,18 +18,18 @@ public class JsonWebToken {
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	private static final int RANDOM_SIZE = 128;
-	private static final String SECRET = "nrj5m5sui65sdu";
+	private static final String SECRET = "nrj5m5sui65sdu"; //TODO
 	private static final Algorithm ALGORITHM = Algorithm.HMAC512(SECRET);
 
 	public static String generate(UUID userId) {
-		byte[] rand = new byte[RANDOM_SIZE];
-		RANDOM.nextBytes(rand);
+		byte[] nonce = new byte[RANDOM_SIZE];
+		RANDOM.nextBytes(nonce);
 
 		return JWT.create()
 			.withIssuer("e-edu")
 			.withSubject("jwt")
 			.withClaim("userId", userId.toString())
-			.withClaim("rand", Base64.getEncoder().encodeToString(rand))
+			.withClaim("nonce", Base64.getEncoder().encodeToString(nonce))
 			.withIssuedAt(Date.from(Instant.now()))
 			.withExpiresAt(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
 			.sign(ALGORITHM);
