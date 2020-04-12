@@ -1,6 +1,5 @@
 package de.themorpheus.edu.gateway.backend;
 
-import de.themorpheus.edu.gateway.GatewayApplication;
 import de.themorpheus.edu.gateway.backend.user.UserCreateDTO;
 import de.themorpheus.edu.gateway.backend.user.UserErrorResponseDTO;
 import de.themorpheus.edu.gateway.backend.user.UserLoginRequestDTO;
@@ -21,9 +20,9 @@ public class UserService extends Service {
 
 	public RegisterResponse createUser(
 		@NotNull String email,
-		@NotNull  String password,
-		@NotNull  String firstName,
-		@NotNull  String lastName,
+		@NotNull String password,
+		@NotNull String firstName,
+		@NotNull String lastName,
 		@Nullable String teacherToken) throws IOException {
 
 		Request request = request("/user")

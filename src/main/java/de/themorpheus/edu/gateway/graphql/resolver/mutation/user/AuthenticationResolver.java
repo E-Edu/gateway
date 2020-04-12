@@ -28,6 +28,7 @@ public class AuthenticationResolver implements GraphQLMutationResolver {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResolver.class.getSimpleName());
 
+	@SuppressWarnings("checkstyle:IllegalCatch")
 	public UserRegisterResultDTO register(@Valid UserRegisterDTO userRegisterDTO, DataFetchingEnvironment environment) {
 		UserRegisterResultDTO.UserAuthResultType resultType;
 
@@ -55,6 +56,7 @@ public class AuthenticationResolver implements GraphQLMutationResolver {
 		return new UserRegisterResultDTO(resultType);
 	}
 
+	@SuppressWarnings("checkstyle:IllegalCatch")
 	public UserAuthResultDTO authenticate(@Valid UserAuthDTO userAuth, DataFetchingEnvironment environment) {
 		DecodedJWT requestDeviceId = DeviceId.get(environment);
 		//TODO: Use for protection

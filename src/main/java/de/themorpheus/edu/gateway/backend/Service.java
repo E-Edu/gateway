@@ -14,10 +14,11 @@ import okhttp3.RequestBody;
 @RequiredArgsConstructor
 public abstract class Service {
 
-	private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 	protected static final Gson GSON = new GsonBuilder()
 		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 		.create();
+
+	private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
 	private final String uri;
 
