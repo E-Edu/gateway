@@ -23,8 +23,8 @@ public class RefreshToken {
 	private static final Algorithm ALGORITHM = Algorithm.HMAC512(SECRET);
 
 	public static String generate(UUID userId) {
-		byte[] rand = new byte[RANDOM_SIZE];
-		RANDOM.nextBytes(rand);
+		byte[] nonce = new byte[RANDOM_SIZE];
+		RANDOM.nextBytes(nonce);
 
 		Calendar expirationDate = Calendar.getInstance();
 		expirationDate.setTimeInMillis(System.currentTimeMillis());
@@ -34,7 +34,7 @@ public class RefreshToken {
 			.withIssuer("e-edu")
 			.withSubject("refresh_token")
 			.withClaim("userId", userId.toString())
-			.withClaim("rand", Base64.getEncoder().encodeToString(rand))
+			.withClaim("nonce", Base64.getEncoder().encodeToString(nonce))
 			.withIssuedAt(Date.from(Instant.now()))
 			.withExpiresAt(expirationDate.getTime())
 			.sign(ALGORITHM);

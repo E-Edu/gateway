@@ -41,5 +41,6 @@
 		<Logger name="graphql.GraphQL" level="warn"/>
 		<Logger name="notprivacysafe.graphql" level="warn"/>
 		<Logger name="io.micrometer.influx" level="warn"/>
+		<Logger name="org.thymeleaf" level="warn"/>
 	</Loggers>
 </Configuration>

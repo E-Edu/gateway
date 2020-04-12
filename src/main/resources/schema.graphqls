@@ -36,6 +36,8 @@ type Mutation {
 
     # User
 
+    register(userRegisterInfo: UserRegisterInfo): UserRegisterResult
+
     authenticate(userAuth: UserAuth): UserAuthResult
 
     jwt: JwtResult
@@ -101,6 +103,25 @@ type User {
     email: String
     role: Int
     status: Int
+}
+
+input UserRegisterInfo {
+    passwordHash: String # PBKDF2 (3k rounds) hashed password
+    email: String # Email or Username
+    firstName: String
+    lastName: String
+}
+
+type UserRegisterResult {
+    result: UserRegisterResultType
+}
+
+# HTTP Secure Cookie: device_id
+enum UserRegisterResultType {
+    SUCCESS, # refresh_token set via HTTP Secure Cookie
+    KEY_ALREADY_REGISTERED,
+    REGISTRATION_FAILED, # Password hash wrong format, banned, too many request...
+    MAINTENANCE
 }
 
 # HTTP Secure Cookie: device_id (optional)
