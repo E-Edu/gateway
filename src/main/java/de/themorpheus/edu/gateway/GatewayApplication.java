@@ -3,7 +3,6 @@ package de.themorpheus.edu.gateway;
 import de.themorpheus.edu.gateway.backend.BackendAPI;
 import de.themorpheus.edu.gateway.util.GitInfo;
 import com.careykevin.graphql.actuator.instrumentation.EnableGraphQLActuator;
-import com.jcabi.manifests.Manifests;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import lombok.Getter;
@@ -66,7 +65,7 @@ public class GatewayApplication {
 		try {
 			GitInfo gitInfo = GitInfo.load();
 			sentry.addTag("build-host", gitInfo.getBuildHost());
-			sentry.addTag("build-time", Manifests.read("Build-Time"));
+			sentry.addTag("build-time", gitInfo.getBuildTime());
 			sentry.addTag("build-user-email", gitInfo.getBuildUserEmail());
 			sentry.addTag("build-version", gitInfo.getBuildVersion());
 			sentry.addTag("git-branch", gitInfo.getBranch());

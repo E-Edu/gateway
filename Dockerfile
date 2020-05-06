@@ -2,7 +2,7 @@ FROM adoptopenjdk/openjdk11:alpine-jre
 
 WORKDIR /eedu
 
-COPY /build/libs/gateway-0.0.1-SNAPSHOT.jar gateway.jar
+COPY /target/gateway-0.1-SNAPSHOT.jar gateway.jar
 
 EXPOSE 80
 

@@ -2,7 +2,6 @@ package de.themorpheus.edu.gateway.graphql.resolver.query;
 
 import de.themorpheus.edu.gateway.graphql.dto.generic.ServiceInfoDTO;
 import de.themorpheus.edu.gateway.util.GitInfo;
-import com.jcabi.manifests.Manifests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class ServiceInfoResolver implements GraphQLQueryResolver {
 				"Gateway",
 				ServiceInfoResolver.class.getPackage().getImplementationVersion(),
 				info.getCommitId(),
-				Long.parseLong(Manifests.read("Build-Time"))
+				0L// TODO: Long.parseLong(info.getBuildTime())
 			);
 		} catch (IOException ex) {
 			LOGGER.error("Error while initializing service info using git properties", ex);

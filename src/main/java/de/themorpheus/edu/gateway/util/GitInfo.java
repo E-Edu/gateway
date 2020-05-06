@@ -1,40 +1,41 @@
 package de.themorpheus.edu.gateway.util;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import java.io.IOException;
-import java.util.Properties;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GitInfo {
 
+	@JsonProperty(value = "git.branch")
 	private String branch;
+	@JsonProperty("git.build.host")
 	private String buildHost;
+	@JsonProperty("git.build.time")
+	private String buildTime;
+	@JsonProperty("git.build.user.email")
 	private String buildUserEmail;
+	@JsonProperty("git.build.version")
 	private String buildVersion;
+	@JsonProperty("git.commit.id")
 	private String commitId;
-	private String commitMessageShort;
+	@JsonProperty("git.commit.message.short")
+	private String commitMessageShort;;
+	@JsonProperty("git.commit.user.email")
 	private String commitUserEmail;
+	@JsonProperty("git.dirty")
 	private String gitDirty;
 
 	public static GitInfo load() throws IOException {
 		Resource resource = new ClassPathResource("git.properties");
-		Properties properties = new Properties();
-		properties.load(resource.getInputStream());
-
-		return new GitInfo(
-			properties.getProperty("git.branch"),
-			properties.getProperty("git.build.host"),
-			properties.getProperty("git.build.user.email"),
-			properties.getProperty("git.build.version"),
-			properties.getProperty("git.commit.id"),
-			properties.getProperty("git.commit.message.short"),
-			properties.getProperty("git.commit.user.email"),
-			properties.getProperty("git.dirty")
-		);
+		return new ObjectMapper().readValue(resource.getInputStream(), GitInfo.class);
 	}
 
 }
