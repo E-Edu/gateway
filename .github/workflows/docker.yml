@@ -15,8 +15,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.9
-      - run: chmod 755 gradlew
-      - run: ./gradlew build
+      - run: mvn clean install -Dcheckstyle.skip
 
       - name: Docker Build & Push
         uses: docker/build-push-action@v1
