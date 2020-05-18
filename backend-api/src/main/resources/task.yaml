@@ -1,0 +1,4714 @@
+openapi: 3.0.1
+info:
+  title: Task Microservice WIP
+  version: v1
+servers:
+  - url: http://localhost:80
+tags:
+  - name: task
+    description: Task
+  - name: task_group
+    description: Task Group
+  - name: subject
+    description: Subject
+  - name: module
+    description: Module
+  - name: lecture
+    description: Lecture
+  - name: difficulty
+    description: Difficulty
+  - name: task_type
+    description: Task Types
+  - name: solution
+    description: Solution
+paths:
+  /task:
+    post:
+      tags:
+        - task
+      summary: Creates a new task
+      operationId: createTask
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                  example: "Calculate Term"
+                description:
+                  type: string
+                  example: "Calculate the following Term: 3(6*7-9)/3"
+                language:
+                  type: string
+                  example: "de-DE"
+                necessary_points:
+                  type: integer
+                  example: 100
+                task_type_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [task_type_name_key: string], but one has to be present.  If both are present the id will be used."
+                lecture_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [lecture_name_key: string], but one has to be present.  If both are present the id will be used."
+                difficulty_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [difficulty_name_key: string], but one has to be present.  If both are present the id will be used."
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{task_id}:
+    get:
+      tags:
+        - task
+      summary: Gets a task
+      operationId: getTask
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: CORS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - task
+      summary: Edits a Task
+      operationId: editTask
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                  example: 1
+                task:
+                  type: string
+                  example: "Calculate Term"
+                description:
+                  type: string
+                  example: "Calculate the following Term: 3(6*7-9)/3"
+                language:
+                  type: string
+                  example: "de-DE"
+                necessary_points:
+                  type: integer
+                  example: 100
+                task_type_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [task_type_name_key: string]"
+                lecture_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [lecture_name_key: string]"
+                difficulty_id:
+                  type: integer
+                  example: 1
+                  description: "Also possible to use [difficulty_name_key: string]"
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - task
+      summary: Deletes a Task
+      operationId: deleteTask
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/next:
+    post:
+      tags:
+        - task
+      summary: Gets next random task
+      description: Gets next random task in current lecture based on last task and
+        takes an integer array of the already absolved tasks ids.
+      operationId: getNext
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                last_task_ids:
+                  type: array
+                  description: List of tasks that have already been absolved
+                  items:
+                    type: integer
+                  example:
+                    - 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/own:
+    get:
+      tags:
+        - task
+      summary: Gets all tasks created by the user
+      operationId: getOwnTasks
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/user/{user_id}:
+    get:
+      tags:
+        - task
+      summary: Get all tasks created by specified user
+      operationId: getUserTasks
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: user_id
+          in: path
+          required: true
+          description: The UUID of the user
+          schema:
+            type: string
+            example: "52bd088c-d6ad-4cee-9f93-cabfc8c07234"
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/vote/{task_id}:
+    put:
+      tags:
+        - task
+      summary: Votes for a task
+      description: Vote for a specific task. The vote argument can **only** be *1* or
+        *-1*
+      operationId: voteTask
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: integer
+                  example: 1
+                  description: Can only be 1 or -1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskVote'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/verify/{task_id}:
+    patch:
+      tags:
+        - task
+      summary: Verifys a task
+      operationId: verifyTask
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/solution_type/{task_id}:
+    get:
+      tags:
+        - task
+      summary: Get the solution_type of a task
+      operationId: getTaskSolutionType
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solution_type:
+                    type: string
+                    example: "multiple_choice_solution"
+
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/done/{task_id}:
+    get:
+      tags:
+        - task
+      summary: Marks a task as done
+      operationId: markTaskAsDone
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            example: 1
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_done_id:
+                    type: integer
+                    example: 1
+                  date:
+                    type: integer
+                    example: 1589528838573
+                    format: int64
+                    description: "(Timestamp)"
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group:
+    post:
+      tags:
+        - task_group
+      summary: Create a Task Group
+      operationId: createTaskGroup
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lecture_id:
+                  type: integer
+                  example: 1
+                name_key:
+                  type: string
+                  example: Tolles-Aufgaben-Pack
+                task_ids:
+                  type: array
+                  items:
+                    type: integer
+                    example: 1
+                difficulty_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_group_id:
+                    type: integer
+                    example: 1
+                  lecture_id:
+                    type: integer
+                    example: 1
+                  name_key:
+                    type: string
+                    example: Tolles-Aufgaben-Pack
+                  task_ids:
+                    type: array
+                    items:
+                      type: integer
+                      example: 1
+                  difficulty_id:
+                    type: integer
+                    example: 1
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - task_group
+      summary: Edit a Task Group
+      operationId: editTaskGroup
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_group_id:
+                  type: integer
+                  example: 1
+                  description: The task group id to modify
+                lecture_id:
+                  type: integer
+                  example: 1
+                name_key:
+                  type: string
+                  example: Tolles-Aufgaben-Pack
+                task_ids:
+                  type: array
+                  items:
+                    type: integer
+                    example: 1
+                difficulty_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lecture_id:
+                    type: integer
+                    example: 1
+                  name_key:
+                    type: string
+                    example: Tolles-Aufgaben-Pack
+                  task_ids:
+                    type: array
+                    items:
+                      type: integer
+                      example: 1
+                  difficulty_id:
+                    type: integer
+                    example: 1
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group/own:
+    get:
+      tags:
+        - task_group
+      summary: Get all task groups created by the user
+      operationId: getOwnTaskGroups
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskGroup'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group/user/{user_id}:
+    get:
+      tags:
+        - task_group
+      summary: Get all task groups from specified user
+      operationId: getTaskGroupsFromUser
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 0b870676-1a01-47aa-8402-859fb9806238
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskGroup'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group/{task_group_id}:
+    get:
+      tags:
+        - task_group
+      summary: Get a task group
+      operationId: getTaskGroup
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_group_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskGroup'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - task_group
+      summary: Delete a Task Group
+      operationId: deleteTaskGroup
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_group_id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group/task:
+    post:
+      tags:
+        - task_group
+      summary: Add single task to Task Group
+      operationId: addTaskToTaskGroups
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_group_id:
+                  type: integer
+                  example: 1
+                  description: The task group id to add the task to
+                task_id:
+                  type: integer
+                  description: The id of the task to add to the Task Group
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_group_id:
+                    type: integer
+                    example: 1
+                    description: The task group id to add the task to
+                  task_id:
+                    type: integer
+                    description: The id of the task to add to the Task Group
+                    example: 1
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_group/{task_group_id}/task/{task_id}:
+    delete:
+      tags:
+        - task_group
+      summary: Remove single task from Task Group
+      operationId: removeTaskFromTaskGroups
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_group_id
+          in: path
+          required: true
+          description: The id of the task group
+          schema:
+            type: integer
+            example: 1
+        - name: task_id
+          in: path
+          required: true
+          description: The id of the task to remove from the task group
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture/{lecture_name_key}/task_group:
+    get:
+      tags:
+        - task_group
+      summary: Get Task Groups from lecture
+      operationId: getTaskGroupsFromLecture
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: lecture_name_key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_Groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskGroup'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/multiple_choice/:
+    post:
+      tags:
+        - solution
+      summary: Creates a new multiple choice Solution
+      operationId: createmultipleChoiceSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          applicaton/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                  example: 1
+                solution:
+                  type: string
+                  example: "L\xF6sung 1"
+                is_correct:
+                  type: boolean
+                  example: 1
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  multiple_choice_solution_id:
+                    type: integer
+                    minimum: 1
+                    example: 1
+                  correct:
+                    type: boolean
+                    example: true
+                  solution:
+                    type: string
+                    example: "L\xF6sung 1 lol"
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/multiple_choice/{task_id}:
+    get:
+      tags:
+        - solution
+      summary: Get all multiple choice solutions from task id
+      operationId: getMultipleChoiceSolutions
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solutions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        multiple_choice_solution_id:
+                          type: integer
+                          example: 1
+                        solution:
+                          type: string
+                          example: "L\xF6sung 1 lol"
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/multiple_choice/{task_id}/all:
+    get:
+      tags:
+        - solution
+      summary: Same as solution/multiple_choice/{task_id}, but returns more data.
+        This route can only be used by teachers.
+      operationId: getAllMultipleChoiceSolutionsExpanded
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solutions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        multiple_choice_solution_id:
+                          type: integer
+                          example: 1
+                        solution:
+                          type: string
+                          example: "L\xF6sung 1 lol"
+                        correct:
+                          type: boolean
+                          example: true
+  /solution/multiple_choice/check:
+    post:
+      tags:
+        - solution
+      summary: Check multiple choice solutions
+      operationId: checkMultipleChoiceSolutions
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                solution:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      multiple_choice_solution_id:
+                        type: integer
+                        example: 1
+                      correct:
+                        type: boolean
+                        example: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solutions:
+                    type: array
+                    items:
+                      type: boolean
+                    description: Array if solution is true or not
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/multiple_choice/{multiple_choice_solution_id}:
+    delete:
+      tags:
+        - solution
+      summary: Deletes a multiple choice Solution
+      operationId: deleteMultipleChoiceSolutions
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: multiple_choice_solution_id
+          description: Id of the muliple choice solution
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/freestyle:
+    post:
+      tags:
+        - solution
+      summary: Create a freestyle sample solution
+      operationId: createFreestyleSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SampleSolution'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/freestyle/check:
+    post:
+      tags:
+        - solution
+      summary: Check freestyle solution
+      operationId: checkFreestyleSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                solution:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleSolution'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/freestyle/{task_id}:
+    delete:
+      tags:
+        - solution
+      summary: Delte freestyle solution
+      operationId: deleteFreestyleSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/wordsalad/:
+    post:
+      tags:
+        - solution
+      summary: Creates a new wordsalad Solution
+      operationId: createWordsaladSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          applicaton/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                solution:
+                  type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wordsalad_solution_id:
+                    type: integer
+                  solution:
+                    type: string
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - solution
+      summary: Edits a wordsalad Solution
+      operationId: editWordsaladSolution
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                solution:
+                  type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wordsalad_solution_id:
+                    type: integer
+                  solution:
+                    type: string
+        400:
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/wordsalad/{task_id}:
+    get:
+      tags:
+        - solution
+      summary: Get all wordsalad solution from task id
+      operationId: getWordsaladSolution
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solution:
+                    type: string
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - solution
+      summary: Deletes a Wordsalad solution
+      operationId: deleteWordsaladSolutions
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/wordsalad/check:
+    post:
+      tags:
+        - solution
+      summary: Check wordsalad solution
+      operationId: checkWordsaladSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                solution:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: boolean
+                  solution:
+                    type: string
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/image/:
+    post:
+      tags:
+        - solution
+      summary: Create a image solution
+      operationId: createImageSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                solution:
+                  type: string
+                  example: LINK_TO_IMAGE
+                  format: URL
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: integer
+                  solution:
+                    type: string
+                    example: LINK_TO_IMAGE
+                    format: URL
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/image/{task_id}:
+    get:
+      tags:
+        - solution
+      summary: Get all image solution from task id
+      operationId: getImageSolution
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - solution
+      summary: Deletes a Image Solution
+      operationId: deleteImmageSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/image/check:
+    post:
+      tags:
+        - solution
+      summary: Check image solution
+      operationId: solutionImageCheck
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                url:
+                  type: string
+                  example: LINK_TO_IMAGE
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/topic_connection:
+    post:
+      tags:
+        - solution
+      summary: Creates a new topic connection solution
+      operationId: createTopicConnectionSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                point_a:
+                  type: string
+                  description: Name of connection point a. Can not be empty
+                point_b:
+                  type: string
+                  description: Name of connection point b. Can not be empty
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topic_connection_solution_id:
+                    type: integer
+                  point_a:
+                    type: string
+                  point_b:
+                    type: string
+        400:
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/topic_connection/{task_id}:
+    get:
+      tags:
+        - solution
+      summary: Get all topic connection solution from task id
+      operationId: getTopicConnectionSolution
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  points:
+                    type: array
+                    items:
+                      type: string
+                      description: String of a connection point in random order
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/topic_connection/{task_id}/all:
+    get:
+      tags:
+        - solution
+      summary: Same as /solution/multiple_choice/{task_id}, but returns more data.
+        This route can only be used by teachers.
+      operationId: getAllTopicConnectionSolutionsExpanded
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          description: The unique task id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solutions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic_connection_solution_id:
+                          type: integer
+                        point_a:
+                          type: string
+                        point_b:
+                          type: string
+  /solution/topic_connection/check:
+    post:
+      tags:
+        - solution
+      summary: check topic connection solution
+      operationId: checkTopicConnectionSolution
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                connected_points:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      point_a:
+                        type: string
+                      point_b:
+                        type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic_connection_solution_id:
+                          type: integer
+                        point_a:
+                          type: string
+                        point_b:
+                          type: string
+                  wrong:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic_connection_solution_id:
+                          type: integer
+                        point_a:
+                          type: string
+                        point_b:
+                          type: string
+                  missing:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic_connection_solution_id:
+                          type: integer
+                        point_a:
+                          type: string
+                        point_b:
+                          type: string
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/topic_connection/{topic_connection_solution_id}:
+    delete:
+      tags:
+        - solution
+      summary: deletes a topic connection solution
+      operationId: deleteTopicConnectionSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: topic_connection_solution_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /solution/simple_equation:
+    post:
+      tags:
+        - solution
+      summary: Creates a simple equation solution
+      operationId: createSimpleEquationSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taks_id:
+                  type: integer
+                result:
+                  type: string
+                steps:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        simple_equation_solution_id:
+                          type: integer
+                        step:
+                          type: string
+    put:
+      tags:
+        - solution
+      summary: Updates a simple equation
+      operationId: updateSimpleEquationSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                result:
+                  type: string
+                steps:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      simple_equation_solution_id:
+                        type: integer
+                        description: If you want to create a new step at the end just
+                          increment the last step id by one. If you want to change
+                          the order of the steps you can change the simple equation
+                          solution ids of all the steps to do so.
+                      step:
+                        type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        simple_equation_solution_id:
+                          type: integer
+                        step:
+                          type: string
+  /solution/simple_equation/check:
+    post:
+      tags:
+        - solution
+      summary: check a simple equation solution
+      operationId: checkSimpleEquationSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: integer
+                result:
+                  type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: boolean
+                  result:
+                    type: string
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        simple_equation_solution_id:
+                          type: integer
+                        step:
+                          type: string
+  /solution/simple_equation/{task_id}:
+    delete:
+      tags:
+        - solution
+      summary: deletes a simple_equation solution
+      operationId: deleteSimpleEquationSolution
+      security:
+        - JWT:
+            - read
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+      responses:
+        '200':
+          description: Ok
+  /subject:
+    post:
+      tags:
+        - subject
+      summary: Create a subject
+      operationId: createSubject
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_key:
+                  type: string
+                  example: maths
+                description_key:
+                  type: string
+                  example: calculating numbers
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - subject
+      summary: Get all subjects
+      operationId: getSubjects
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subjects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subject'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subject/{name_key}:
+    get:
+      tags:
+        - subject
+      summary: Get subject by name_key
+      operationId: getSubjectbyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: maths
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - subject
+      summary: Delete subject by name_key
+      operationId: deleteSubjectbyname_key
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: maths
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subject/{subject_id}:
+    get:
+      tags:
+        - subject
+      summary: Get subject by subject_id
+      operationId: getSubjectbysubject_id
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - subject
+      summary: Delete subject by subject_id
+      operationId: deleteSubjectbysubject_id
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /module:
+    post:
+      tags:
+        - module
+      summary: Create module
+      operationId: createModule
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_key:
+                  type: string
+                  example: geometry
+                subject_name_key:
+                  type: string
+                  example: maths
+                subject_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Module"
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - module
+      summary: Get all modules
+      operationId: getModules
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Module'
+  /module/{name_key}:
+    get:
+      tags:
+        - module
+      summary: Get module by name_key
+      operationId: getModulebyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          example: geometry
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - module
+      summary: Delete Module by name_key
+      operationId: deleteModulebyname_key
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          example: geometry
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /module/{module_id}:
+    get:
+      tags:
+        - module
+      summary: Get module by module_id
+      operationId: getModulebymodule_id
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: module_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - module
+      summary: Delete Module by module_id
+      operationId: deleteModulebymodule_id
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: module_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subject/{subject_name_key}/module:
+    get:
+      tags:
+        - subject
+      summary: Get modules from subject
+      operationId: getModulesFromSubjectbyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: subject_name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: maths
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Module'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subject/{subject_id}/module:
+    get:
+      tags:
+        - subject
+      summary: Get modules from subject
+      operationId: getModulesFromSubjectbysubject_id
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Module'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture:
+    post:
+      tags:
+        - lecture
+      summary: Create lecture
+      operationId: createLecture
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_key:
+                  type: string
+                  example: squares
+                module_name_key:
+                  type: string
+                  example: geometry
+                module_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lecture_id:
+                    type: integer
+                    example: 1
+                  name_key:
+                    type: string
+                    example: squares
+                  module_name_key:
+                    type: string
+                    example: geometry
+                  module_id:
+                    type: integer
+                    example: 1
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - lecture
+      summary: Get all lectures
+      operationId: getLectures
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lectures:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lecture'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture/{lecture_id}:
+    get:
+      tags:
+        - lecture
+      summary: Get lecture by id
+      operationId: getLecturebyid
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: lecture_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecture'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - lecture
+      summary: Delete Lecture by id
+      operationId: deleteLecturebyid
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: lecture_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture/{name_key}:
+    get:
+      tags:
+        - lecture
+      summary: Get lecture by name_key
+      operationId: getLecturebyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: squares
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecture'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - lecture
+      summary: Delete Lecture by name_key
+      operationId: deleteLecturebyname_key
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: squares
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture/{lecture_id}/task:
+    get:
+      tags:
+        - lecture
+      summary: Get all Tasks by lecture_id
+      operationId: getTaskByLectureId
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: lecture_id
+          in: path
+          required: true
+          description: The unique lecture id
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /lecture/{name_key}/task:
+    get:
+      tags:
+        - lecture
+      summary: Get all Tasks by lecture_name_key
+      operationId: getTaskByLectureNameKey
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/JWT'
+        - name: X-ServiceToken
+          in: header
+          required: true
+          description: View schema
+          schema:
+            $ref: '#/components/schemas/X-ServiceToken'
+        - name: name_key
+          in: path
+          required: true
+          description: The unique lecture name key
+          schema:
+            type: string
+            example: geometry
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /module/{module_name_key}/lecture:
+    get:
+      tags:
+        - module
+      summary: Get lectures from module_name_key
+      operationId: getLecturesFromModule_name_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: module_name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: geometry
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lectures:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lecture'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /module/{module_id}/lecture:
+    get:
+      tags:
+        - module
+      summary: Get lectures from module_id
+      operationId: getLecturesFromModule_id
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: module_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lectures:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lecture'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /difficulty:
+    post:
+      tags:
+        - difficulty
+      summary: Create difficulty
+      operationId: createDifficulty
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_key:
+                  type: string
+                  example: easy
+
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  difficulty_id:
+                    type: integer
+                    example: 1
+                  name_key:
+                    type: string
+                    example: easy
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - difficulty
+      summary: Get all difficultys
+      operationId: getDifficultys
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  difficulties:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Difficulty'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /difficulty/{name_key}:
+    get:
+      tags:
+        - difficulty
+      summary: Get difficulty by name_key
+      operationId: getDifficultybyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: easy
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Difficulty'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - difficulty
+      summary: Delete difficulty by name_key
+      operationId: deleteDifficultybyname_key
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: easy
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /difficulty/{difficulty_id}:
+    get:
+      tags:
+        - difficulty
+      summary: Get difficulty by difficulty_id
+      operationId: getDifficultybydifficulty_id
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: difficulty_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Difficulty'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - difficulty
+      summary: Delete difficulty by difficulty_id
+      operationId: deleteDifficultybydifficulty_id
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: difficulty_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_type:
+    post:
+      tags:
+        - task_type
+      summary: Create task type
+      operationId: createTaskType
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_key:
+                  type: string
+                  example: exercise
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskType'
+
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - task_type
+      summary: Get all task types
+      operationId: getAllTaskTypes
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+        - name: X-ServiceToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_types:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskType'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_type/{name_key}:
+    get:
+      tags:
+        - task_type
+      summary: Get task type by name_key
+      operationId: getTaskTypebyname_key
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: exercise
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskType'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - task_type
+      summary: Delete task type by name_key
+      operationId: deleteTaskTypebyname_key
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: name_key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: exercise
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task_type/{task_type_id}:
+    get:
+      tags:
+        - task_type
+      summary: Get task type by task_type_id
+      operationId: getTaskTypebyid
+      security:
+        - JWT:
+            - read
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_type_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskType'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - task_type
+      summary: Delete task type by task_type_id
+      operationId: deleteTaskTypebytask_type_id
+      security:
+        - JWT:
+            - write
+        - ServiceToken:
+            - read
+            - write
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: task_type_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ServiceToken:
+      type: http
+      scheme: bearer
+      bearerFormat: randomstring
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MethodNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotAcceptable:
+      description: Not acceptable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestTimeout:
+      description: Request timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Gone:
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    LengthRequiered:
+      description: Length requiered
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PreconditionFailed:
+      description: Precondition failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PayloadTooLarge:
+      description: Payload too large
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestURITooLong:
+      description: Request-URI too long
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RequestRangeNotSatisfiable:
+      description: Request range not satisfiable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ExpectationFailed:
+      description: Expectation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Locked:
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NoResponse:
+      description: No response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotImplemented:
+      description: Not implemented
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadGateway:
+      description: BadGateway
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServiceUnavailable:
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Insufficient Storage:
+      description: Insufficient Storage
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    LoopDetected:
+      description: Loop detected
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BandwidthLimitExceeded:
+      description: Bandwidth limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotExtended:
+      description: Not extended
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NetworkAuthenticationRequired:
+      description: Network authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NetworkConnectTimeoutError:
+      description: Network connect timeout error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    JWT:
+      type: string
+      example: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODk0ODE3NDEsImV4cCI6MTYwOTQ1NTYwMCwibm9uY2UiOiJuaWNlbGl0dGxlcmFuZG9tc3RyaW5nIiwiYXVkIjpbImdld2lhLmNvbSJdLCJzY29wZXMiOlsidGFzay50YXNrLnJlYWQuYWxsIiwidGFzay50YXNrLndyaXRlLmFsbCIsInRhc2sudGFzay5kZWxldGUuYWxsIiwidGFzay50YXNrZ3JvdXAucmVhZC5hbGwiLCJ0YXNrLnRhc2tncm91cC53cml0ZS5hbGwiLCJ0YXNrLnRhc2tncm91cC5kZWxldGUuYWxsIiwidGFzay5zdWJqZWN0LnJlYWQuYWxsIiwidGFzay5zdWJqZWN0LndyaXRlLmFsbCIsInRhc2suc3ViamVjdC5kZWxldGUuYWxsIiwidGFzay5tb2R1bGUucmVhZC5hbGwiLCJ0YXNrLm1vZHVsZS53cml0ZS5hbGwiLCJ0YXNrLm1vZHVsZS5kZWxldGUuYWxsIiwidGFzay5sZWN0dXJlLnJlYWQuYWxsIiwidGFzay5sZWN0dXJlLndyaXRlLmFsbCIsInRhc2subGVjdHVyZS5kZWxldGUuYWxsIiwidGFzay5kaWZmaWN1bHR5LnJlYWQuYWxsIiwidGFzay5kaWZmaWN1bHR5LndyaXRlLmFsbCIsInRhc2suZGlmZmljdWx0eS5kZWxldGUuYWxsIiwidGFzay50YXNrdHlwZS5yZWFkLmFsbCIsInRhc2sudGFza3R5cGUud3JpdGUuYWxsIiwidGFzay50YXNrdHlwZS5kZWxldGUuYWxsIiwidGFzay51c2VyLnJlYWQuYWxsIiwidGFzay51c2VyLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLm11bHRpcGxlY2hvaWNlLnJlYWQuYWxsIiwidGFzay5zb2x1dGlvbi5tdWx0aXBsZWNob2ljZS53cml0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLm11bHRpcGxlY2hvaWNlLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLmFuYWdyYW0ucmVhZC5hbGwiLCJ0YXNrLnNvbHV0aW9uLmFuYWdyYW0ud3JpdGUuYWxsIiwidGFzay5zb2x1dGlvbi5hbmFncmFtLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLmZyZWVzdHlsZS5yZWFkLmFsbCIsInRhc2suc29sdXRpb24uZnJlZXN0eWxlLndyaXRlLmFsbCIsInRhc2suc29sdXRpb24uZnJlZXN0eWxlLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLmltYWdlLnJlYWQuYWxsIiwidGFzay5zb2x1dGlvbi5pbWFnZS53cml0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLmltYWdlLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLnRvcGljY29ubmVjdGlvbi5yZWFkLmFsbCIsInRhc2suc29sdXRpb24udG9waWNjb25uZWN0aW9uLndyaXRlLmFsbCIsInRhc2suc29sdXRpb24udG9waWNjb25uZWN0aW9uLmRlbGV0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLnNpbXBsZWVxdWF0aW9uLnJlYWQuYWxsIiwidGFzay5zb2x1dGlvbi5zaW1wbGVlcXVhdGlvbi53cml0ZS5hbGwiLCJ0YXNrLnNvbHV0aW9uLnNpbXBsZWVxdWF0aW9uLmRlbGV0ZS5hbGwiXX0.m3MuV-N7lkYn3SSamesEZ1o6FMrrMNQBXMv8JneSuoXu-5KgN2p7VMZJlvXN0_toKQQ1wixlGh-DxSO6pEfU_w"
+      description: "Json Web Token (Example has all scopes, expires 2021, HS512 encoding, secret: 'SECRET')"
+    X-ServiceToken:
+      type: string
+      example: "SECRET"
+      description: "ServiceToken to force just using gateway"
+    Task:
+      type: object
+      properties:
+        task_id:
+          type: integer
+          example: 1
+        task:
+          type: string
+          example: "Calculate Term"
+        description:
+          type: string
+          example: "Calculate the following Term: 3(6*7-9)/3"
+        language:
+          type: string
+          example: "de-DE"
+        author_id:
+          type: string
+          example: "52bd088c-d6ad-4cee-9f93-cabfc8c07234"
+        necessary_points:
+          type: integer
+          example: 100
+        verified:
+          type: boolean
+          example: false
+        lecture:
+          type: object
+          properties:
+            lecture_id:
+              type: integer
+              example: 1
+            name_key:
+              type: string
+              example: "geometry"
+            module_id:
+              type: integer
+              example: 1
+        task_type_id:
+          type: object
+          properties:
+            task_type_id:
+              type: integer
+              example: 1
+            name_key:
+              type: string
+              example: "exercise"
+        difficulty_id:
+          type: object
+          properties:
+            difficulty_id:
+              type: integer
+              example: 1
+            name_key:
+              type: string
+              example: "easy"
+    TaskVote:
+      type: object
+      properties:
+        task_vote_id:
+          type: integer
+          example: 1
+        user_id:
+          type: string
+          example: "52bd088c-d6ad-4cee-9f93-cabfc8c07234"
+        value:
+          type: integer
+          example: 1
+    TaskGroup:
+      type: object
+      properties:
+        task_group_id:
+          type: integer
+          example: 1
+        lecture_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: Tolles-Aufgaben-Pack
+        task_ids:
+          type: array
+          items:
+            type: integer
+            example: 1
+        author_id:
+          type: string
+          example: 0b870676-1a01-47aa-8402-859fb9806238
+        difficulty_id:
+          type: integer
+          example: 1
+    Lecture:
+      type: object
+      properties:
+        lecture_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: squares
+        module_id:
+          type: integer
+          example: 1
+    Module:
+      type: object
+      properties:
+        module_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: geometry
+        subject_id:
+          type: integer
+          example: 1
+    Subject:
+      type: object
+      properties:
+        subject_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: maths
+        description_key:
+          type: string
+          example: calculating numbers
+    Difficulty:
+      type: object
+      properties:
+        difficulty_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: easy
+    TaskType:
+      type: object
+      properties:
+        task_type_id:
+          type: integer
+          example: 1
+        name_key:
+          type: string
+          example: exercise
+    SampleSolution:
+      type: object
+      properties:
+        task_id:
+          type: integer
+        solution:
+          type: string
+          description: Sample solution
+    Error:
+      oneOf:
+        - $ref: '#/components/schemas/InternalError'
+        - $ref: '#/components/schemas/ValidationError'
+        - $ref: '#/components/schemas/ControllerError'
+    InternalError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: 2020-03-22T20:26:47.367+0000
+        status:
+          type: string
+          example: 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+        path:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: 2020-03-22T14:52:51.714+0000
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+        path:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              codes:
+                type: array
+                items:
+                  type: string
+              arguments:
+                type: array
+                items:
+                  additionalProperties:
+                    type: string
+              default_message:
+                type: string
+              object_name:
+                type: string
+              field:
+                type: string
+              rejected_value:
+                type: string
+              binding_failure:
+                type: boolean
+              code:
+                type: string
+    ControllerError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 404
+        message_key:
+          type: string
+          example: NOT_FOUND
+        extra:
+          type: string
+          example: task
+      required:
+        - message_key
+        - status
